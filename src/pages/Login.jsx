@@ -11,14 +11,10 @@ const Login = () => {
     const [isLogin, setIsLogin] = useState(true);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [username, setUsername] = useState("");
 
     const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        navigate("/index");
-    };
+   
 
     const onRegister = async (e) => {
         e.preventDefault();
@@ -28,7 +24,7 @@ const Login = () => {
 
             await setDoc(doc(db, "users", user.uid), {
                 email: user.email,
-                username: username,
+                username: user.email,
                 uid: user.uid,
                 createdAt: new Date().toISOString(),
             });
@@ -53,7 +49,7 @@ const Login = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-primary to-secondary flex items-center justify-center p-4">
+        <div className="min-h-screen bg-gradient-to-r from-violet-600 to-indigo-600 flex items-center justify-center p-4">
             <div className="w-full max-w-md bg-white rounded-xl shadow-xl p-8 animate-fade-in">
                 <div className="flex justify-center mb-6">
                     <Globe className="w-16 h-16 text-primary" />
@@ -63,9 +59,6 @@ const Login = () => {
                 </h1>
                 <form onSubmit={isLogin ? onLogin : onRegister} className="space-y-4">
                     <div className="space-y-2">
-                        {!isLogin && (
-                            <Input type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Kullanıcı adı" className="w-full" required />
-                        )}
                         <Input
                             type="email"
                             value={email}
