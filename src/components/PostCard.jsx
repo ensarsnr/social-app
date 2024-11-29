@@ -5,53 +5,49 @@ import { Button } from "./ui/button";
 import { Heart, MessageCircle, Share2 } from "lucide-react";
 import Comments from "./Comments";
 
+const PostCard = ({ postId, username, content, id }) => {
+  const [showComments, setShowComments] = useState(false);
 
-const PostCard = () => {
-    const [showComments, setShowComments] = useState(false);
-
-
-return (
+  return (
     <Card className="mb-4 animate-fade-in">
       <div className="p-4">
         <div className="flex items-center gap-3 mb-4">
-          {/* <Link to={`/profile/${username}`}> */}
-          <Link to={'/'}>
+          <Link to={`/profile/${username}`}>
             <img
-            //   src={avatar}
-            //   alt={username}
+              src={`https://api.dicebear.com/6.x/avataaars/svg?seed=${username}.com`}
               className="w-10 h-10 rounded-full object-cover hover:opacity-80 transition-opacity"
             />
           </Link>
-          <Link to={'/'}>
-            <div className="font-semibold hover:text-primary transition-colors">Deneme İsim</div>
+          <Link to={`/profile/${username}`}>
+            <div className="font-semibold hover:text-primary transition-colors">{username}</div>
           </Link>
         </div>
-        
-        <p className="text-gray-700 mb-4">content</p>
-        
+
+        <p className="text-gray-700 mb-4">{content}</p>
+
         <div className="flex items-center gap-4 text-gray-500">
-          <Button variant="ghost" size="sm" className="gap-2">
+          <Button variant="ghost" size="sm" className="gap-2 hover:bg-red-400 hover:text-white hover:rounded-full rounded-full">
             <Heart className="h-5 w-5" />
-                Beğeniler
+            Beğeniler
           </Button>
-          <Button variant="ghost" size="sm" className="gap-2"
-          onClick={() => setShowComments(!showComments)}
+          <Button
+            variant="ghost"
+            size="sm"
+            className="gap-2 hover:bg-gray-300 hover:rounded-full rounded-full"
+            onClick={() => setShowComments(!showComments)}
           >
             <MessageCircle className="h-5 w-5" />
-                YOrum adeti
-
+            Yorumlar
           </Button>
-          <Button variant="ghost" size="sm">
+          <Button className="hover:bg-blue-300 hover:rounded-full rounded-full" variant="ghost" size="sm">
             <Share2 className="h-5 w-5" />
           </Button>
         </div>
       </div>
-      
-      {showComments && (
-        <Comments  />
-      )}
+
+      {showComments && <Comments postId={postId} />}
     </Card>
-)
-}
+  );
+};
 
 export default PostCard;

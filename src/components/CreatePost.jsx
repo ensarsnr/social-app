@@ -1,41 +1,59 @@
-import React from "react";
+import React, { useState } from "react";
 import { Card } from "./ui/card";
 import { Textarea } from "./ui/textarea";
 import { Button } from "./ui/button";
-import { ImagePlus, Send } from "lucide-react";
+import { Send } from "lucide-react";
+import { addDoc, collection } from "firebase/firestore";
+import { db } from "../firebase";
+import { getAuth } from "firebase/auth";
 
+const CreatePost = ({ onPostSubmit }) => {
+  const [postContent, setPostContent] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-const CreatePost =  () => {
-    return(
-        <Card className="p-4 mb-6 animate-fade-in">
-      <form  className="space-y-4">
+  const handlePostSubmit = async (e) => {
+    e.preventDefault();
+    if (isSubmitting) return; // Çift tıklamayı engelle
+    if (postContent.trim()) {
+      try {
+        setIsSubmitting(true); // İşlem devam ederken tekrar tıklamayı engelle
+        const auth = getAuth();
+        const user = auth.currentUser;
+
+        const docRef = await addDoc(collection(db, "posts"), {
+          content: postContent,
+          username: user.email,
+          createdAt: new Date(),
+        });
+
+        console.log("Post ekleme başarılı, ID:", docRef.id);
+        onPostSubmit(postContent);
+        setPostContent(""); // Formu sıfırla
+      } catch (e) {
+        console.error("Hata:", e);
+      } finally {
+        setIsSubmitting(false); // İşlem tamamlanınca tekrar etkinleştir
+      }
+    }
+  };
+
+  return (
+    <Card className="p-4 mb-6 animate-fade-in">
+      <form onSubmit={handlePostSubmit} className="space-y-4">
         <Textarea
+          value={postContent}
+          onChange={(e) => setPostContent(e.target.value)}
           placeholder="Ne düşünüyorsun?"
           className="min-h-[100px]"
         />
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <input
-              type="file"
-              id="image-upload"
-              accept="image/*"
-              className="hidden"
-            />
-            <Button
-              type="button"
-              variant="outline"
-              size="icon"
-            >
-              <ImagePlus className="h-4 w-4" />
-            </Button>
-          </div>
-          <Button type="submit" className="gap-2">
-            <Send className="h-4 w-4" /> Paylaş
+          <Button type="submit" className="bg-purple-200 gap-2" disabled={isSubmitting}>
+            <Send className="h-4 w-4" /> {isSubmitting ? "Paylaşılıyor..." : "Paylaş"}
           </Button>
         </div>
       </form>
     </Card>
-    )
-}
+  );
+};
 
 export default CreatePost;
