@@ -29,7 +29,7 @@ const Comments = ({ postId }) => {
             createdAt: data.createdAt?.toDate() || new Date(),
           };
         });
-        // En yeni yorumlar üstte görünsün
+        
         setComments(commentsArray.sort((a, b) => b.createdAt - a.createdAt));
       } catch (error) {
         console.error("Yorumlar alınırken hata oluştu:", error);

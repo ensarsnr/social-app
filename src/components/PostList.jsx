@@ -3,20 +3,19 @@ import CreatePost from "./CreatePost";
 import PostCard from "./PostCard";
 import { getDocs, collection, addDoc, getDoc, doc } from "firebase/firestore";
 import { db } from "../firebase";
-import { getAuth } from "firebase/auth"; // Firebase Authentication importu
+import { getAuth } from "firebase/auth"; 
 
 const PostList = () => {
   const [posts, setPosts] = useState([]);
 
-  // Veritabanından postları al
   useEffect(() => {
     const fetchPosts = async () => {
       const querySnapshot = await getDocs(collection(db, "posts"));
       const postsArray = querySnapshot.docs.map((doc) => ({
         ...doc.data(),
-        uid: doc.id, // Benzersiz id'yi dokümandan alıyoruz
+        uid: doc.id, 
       }));
-      setPosts(postsArray); // Firestore'dan alınan postları state'e ekleyelim
+      setPosts(postsArray); 
     };
 
     fetchPosts();
@@ -28,15 +27,13 @@ const PostList = () => {
   
     if (user) {
       try {
-        // Firestore'dan kullanıcı adını almak için
         const userDocRef = doc(db, "users", user.uid);
         const userDocSnap = await getDoc(userDocRef);
   
         if (userDocSnap.exists()) {
           const userData = userDocSnap.data();
-          const username = userData.username || user.email.split('@')[0]; // Eğer kullanıcı adı varsa, yoksa e-posta adresinin ilk kısmı
-  
-          // Firestore'a yeni postu ekle
+          const username = userData.username || user.email.split('@')[0]; 
+
           const docRef = await addDoc(collection(db, "posts"), {
             username,
             content,
@@ -46,11 +43,11 @@ const PostList = () => {
           const newPost = {
             username,
             content,
-            uid: docRef.id, // Firestore'dan gelen benzersiz id
+            uid: docRef.id, 
             createdAt: new Date(),
           };
   
-          setPosts([newPost, ...posts]); // Yeni postu başa ekle
+          setPosts([newPost, ...posts]); 
         } else {
           console.error("Kullanıcı verisi bulunamadı");
         }
@@ -68,7 +65,7 @@ const PostList = () => {
       <CreatePost onPostSubmit={handlePostSubmit} />
       {posts.map((post) => (
         <PostCard
-          key={post.uid} // Benzersiz id'yi key olarak kullanıyoruz
+          key={post.uid}
           username={post.username}
           postId={post.uid}
           content={post.content}

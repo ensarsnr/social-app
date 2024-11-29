@@ -13,10 +13,10 @@ const CreatePost = ({ onPostSubmit }) => {
 
   const handlePostSubmit = async (e) => {
     e.preventDefault();
-    if (isSubmitting) return; // Çift tıklamayı engelle
+    if (isSubmitting) return; 
     if (postContent.trim()) {
       try {
-        setIsSubmitting(true); // İşlem devam ederken tekrar tıklamayı engelle
+        setIsSubmitting(true);
         const auth = getAuth();
         const user = auth.currentUser;
 
@@ -28,11 +28,11 @@ const CreatePost = ({ onPostSubmit }) => {
 
         console.log("Post ekleme başarılı, ID:", docRef.id);
         onPostSubmit(postContent);
-        setPostContent(""); // Formu sıfırla
+        setPostContent(""); 
       } catch (e) {
         console.error("Hata:", e);
       } finally {
-        setIsSubmitting(false); // İşlem tamamlanınca tekrar etkinleştir
+        setIsSubmitting(false);
       }
     }
   };
